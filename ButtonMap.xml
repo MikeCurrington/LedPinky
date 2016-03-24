@@ -1,0 +1,19 @@
+<dat>
+  <buttons>
+    <map port="P1B1" mame="P1_BUTTON1"/>
+    <map port="P1B2" mame="P1_BUTTON2"/>
+    <map port="P1B3" mame="P1_BUTTON3"/>
+    <map port="P1B4" mame="P1_BUTTON4"/>
+    <map port="P1B5" mame="P1_BUTTON5"/>
+    <map port="P1B6" mame="P1_BUTTON6"/>
+    <map port="P2B1" mame="P2_BUTTON1"/>
+    <map port="P2B2" mame="P2_BUTTON2"/>
+    <map port="P2B3" mame="P2_BUTTON3"/>
+    <map port="P2B4" mame="P2_BUTTON4"/>
+    <map port="P2B5" mame="P2_BUTTON5"/>
+    <map port="P2B6" mame="P2_BUTTON6"/>
+    <map port="P1START" mame="P1_START"/>
+    <map port="P2START" mame="P2_START"/>
+  </buttons>
+</dat>
+
