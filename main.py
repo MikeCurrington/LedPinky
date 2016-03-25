@@ -217,6 +217,7 @@ class HttpHandler:
     else:
       ledwiz.ClearPins(False)
       MarqueeFlicker(gpio)
+      ledwiz.SetAllPins( [129,129,129,129,129,129,129,129,129,129,129,129,129,129,129,129], True )
 
 
 ledhttp = HttpHandler()
