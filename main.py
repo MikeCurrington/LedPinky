@@ -9,7 +9,6 @@ from LedWiz import LedWiz
 from LedHttp import LedHttp
 from gpio import ArcadeGpio
 
-
 ledwiz = LedWiz()
 ledwiz.Connect()
 gpio = ArcadeGpio()
@@ -209,6 +208,11 @@ class HttpHandler:
 
     ledwiz.ClearPins(False)
     ledwiz.SetPins(portSettings)
+
+  def SetSleep( self, sleep ):
+    if sleep==True:
+      ledwiz.ClearPins(True)
+      gpio.marqueeBrightness(0)
 
 
 ledhttp = HttpHandler()
