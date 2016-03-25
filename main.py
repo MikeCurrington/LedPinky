@@ -13,23 +13,24 @@ ledwiz = LedWiz()
 ledwiz.Connect()
 gpio = ArcadeGpio()
 
-gpio.marqueeBrightness( 100 )
-time.sleep(0.1)
-gpio.marqueeBrightness( 0 )
-time.sleep(0.5)
-gpio.marqueeBrightness( 100 )
-time.sleep(0.1)
-gpio.marqueeBrightness( 0 )
-time.sleep(0.25)
-gpio.marqueeBrightness( 100 )
-time.sleep(0.1)
-gpio.marqueeBrightness( 0 )
-time.sleep(0.25)
-gpio.marqueeBrightness( 100 )
-time.sleep(0.1)
-gpio.marqueeBrightness( 10 )
-time.sleep(0.25)
-gpio.marqueeBrightness( 99 )
+def MarqueeFlicker( gpio ):
+  gpio.marqueeBrightness( 100 )
+  time.sleep(0.1)
+  gpio.marqueeBrightness( 0 )
+  time.sleep(0.5)
+  gpio.marqueeBrightness( 100 )
+  time.sleep(0.1)
+  gpio.marqueeBrightness( 0 )
+  time.sleep(0.25)
+  gpio.marqueeBrightness( 100 )
+  time.sleep(0.1)
+  gpio.marqueeBrightness( 0 )
+  time.sleep(0.25)
+  gpio.marqueeBrightness( 100 )
+  time.sleep(0.1)
+  gpio.marqueeBrightness( 10 )
+  time.sleep(0.25)
+  gpio.marqueeBrightness( 99 )
 
 
 
@@ -213,6 +214,9 @@ class HttpHandler:
     if sleep==True:
       ledwiz.ClearPins(True)
       gpio.marqueeBrightness(0)
+    else:
+      ledwiz.ClearPins(False)
+      MarqueeFlicker(gpio)
 
 
 ledhttp = HttpHandler()

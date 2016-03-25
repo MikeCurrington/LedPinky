@@ -33,6 +33,9 @@ class LedHttp:
         elif self.path.startswith("/sleep"):
           self.controlHandler.SetSleep(True)
           response = 'ok'
+        elif self.path.startswith("/wake"):
+          self.controlHandler.SetSleep(False)
+          response = 'ok'
         self.send_response(200)
         self.send_header('Content-type','text/html')
         self.end_headers()
