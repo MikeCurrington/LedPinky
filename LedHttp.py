@@ -30,6 +30,9 @@ class LedHttp:
         if self.path.startswith("/game/"):
           self.controlHandler.SetGame( self.path[6:] )
           response = 'ok'
+        elif self.path.startswith("/sleep"):
+          self.controlHandler.SetSleep(True)
+          response = 'ok'
         self.send_response(200)
         self.send_header('Content-type','text/html')
         self.end_headers()
