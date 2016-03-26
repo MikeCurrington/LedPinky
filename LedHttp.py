@@ -36,6 +36,11 @@ class LedHttp:
         elif self.path.startswith("/wake"):
           self.controlHandler.SetSleep(False)
           response = 'ok'
+        elif self.path.startswith("/brightness"):
+          brightness = 100
+          if self.path.startswith("/brightness="):
+            brightness = int( self.path[12:] )
+          self.controlHandler.SetMarqueeBrightness(brightness)
         self.send_response(200)
         self.send_header('Content-type','text/html')
         self.end_headers()

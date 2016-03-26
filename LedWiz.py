@@ -80,12 +80,12 @@ class LedWiz:
     i = 0
     self.wantedOnOff = 0
     for pin in pins:
-      if self.brightness[i] != pin:
-        self.brightness[i] = pin
+      if self.brightnesses[i] != pin:
+        self.brightnesses[i] = pin
         self.brightnessChanged = True
       if (pin <= 0):
         self.wantedOnOff |= (1<<i)
-      i++
+      i = i+1
     if send:
       self.SendUpdates( self )
 
