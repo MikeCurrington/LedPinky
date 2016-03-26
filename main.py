@@ -124,13 +124,10 @@ pinMapping = LoadPinMapping('LEDBlinkyInputMap.xml')
 
 mameOutputMappings = LoadMameOutputMapping('ButtonMap.xml')
 
-#mameOutputMapping = LoadMameOutputsIni('MameOutputs.ini')
 
-
-
-
-tree = ET.parse('controls.xml')
-root = tree.getroot()
+def LoadControlsXml(filename):
+  tree = ET.parse(filename)
+  root = tree.getroot()
 
 """
 print(root.tag)
@@ -142,8 +139,11 @@ for child in root:
   print( str(rom) + " " + str(players) )
 """
 
+
 gamesColors = LoadGameColorIni('Colors.ini')
 defaultColors = LoadGameColorIni('ColorsDefault.ini')
+gameControls = LoadControlsXml('controls.xml')
+
 
 def FindGamePortsAndColors( game ):
   if game in gamesColors:
