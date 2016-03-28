@@ -29,7 +29,7 @@ class GameData(threading.Thread):
       colors[game] = config.items(game)
     return colors
 
-  def LoadControlsXml( self, filename):
+  def LoadControlsXml(self, filename):
     tree = ET.parse(filename)
     root = tree.getroot()
 
@@ -42,7 +42,6 @@ class GameData(threading.Thread):
     
     print( str(rom) + " " + str(players) )
     """
-
 
   def LoadMameOutputMapping( self, xmlFilename ):
     mappings = {}
