@@ -1,3 +1,5 @@
+import xml.etree.ElementTree as ET
+import ConfigParser
 import threading
 
 
@@ -11,14 +13,14 @@ class GameData(threading.Thread):
     self.gameControlsXmlFilename = gameControlsXmlFilename
 
   def run(self):
-    self.gamesColors = LoadGameColorIni(self.gameColorsIniFilename)
-    self.defaultColors = LoadGameColorIni(self.defaultColorsIniFilename)
-    self.gameControls = LoadControlsXml(self.gameControlsXmlFilename)
-    self.mameOutputMappings = LoadMameOutputMapping('ButtonMap.xml')
+    self.gamesColors = self.LoadGameColorIni(self.gameColorsIniFilename)
+    self.defaultColors = self.LoadGameColorIni(self.defaultColorsIniFilename)
+    self.gameControls = self.LoadControlsXml(self.gameControlsXmlFilename)
+    self.mameOutputMappings = self.LoadMameOutputMapping('ButtonMap.xml')
 
     self.loaded = True
 
-  def LoadGameColorIni( iniFilename ):
+  def LoadGameColorIni( self, iniFilename ):
     config = ConfigParser.RawConfigParser()
     config.optionxform = str  # make case sensitive
     config.read(iniFilename)
@@ -27,7 +29,7 @@ class GameData(threading.Thread):
       colors[game] = config.items(game)
     return colors
 
-  def LoadControlsXml(filename):
+  def LoadControlsXml( self, filename):
     tree = ET.parse(filename)
     root = tree.getroot()
 
@@ -42,7 +44,7 @@ class GameData(threading.Thread):
     """
 
 
-  def LoadMameOutputMapping( xmlFilename ):
+  def LoadMameOutputMapping( self, xmlFilename ):
     mappings = {}
     
     buttons = ET.parse( xmlFilename )
@@ -65,7 +67,7 @@ class GameData(threading.Thread):
     return mappings
 
 
-  def FindGamePortsAndColors( game ):
+  def FindGamePortsAndColors( self, game ):
     
     if self.loaded==False:
       self.join()
