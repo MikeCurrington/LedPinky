@@ -8,10 +8,14 @@ import os
 from LedWiz import LedWiz
 from LedHttp import LedHttp
 from gpio import ArcadeGpio
+from GameData import GameData
 
 ledwiz = LedWiz()
 ledwiz.Connect()
 gpio = ArcadeGpio()
+
+gamedata = GameData()
+gamedata.Init( 'ColorsDefault.ini', 'Colors.ini', 'controls.xml')
 
 marqueeBrightness = 100
 
@@ -64,28 +68,6 @@ def LoadPinMapping( xmlFilename ):
 
   return pinMapping
 
-def LoadMameOutputMapping( xmlFilename ):
-  mappings = {}
-
-  buttons = ET.parse( xmlFilename )
-  buttonroot = buttons.getroot()
-
-  gameButtons = buttonroot.iter('buttons')
-  for buttons in gameButtons:
-    gamename = buttons.get('game', 'default')
-    mapping = {}
-    for button in buttons:
-      mameName = button.get('mame')
-      portName = button.get('port')
-      print mameName
-      if mameName in mapping:
-        mapping[mameName].append( portName )
-      else:
-        mapping[mameName] = [portName]
-    mappings[gamename] = mapping
-
-  return mappings
-
 
 def LoadMameOutputsIni( iniFilename ):
 
@@ -109,63 +91,16 @@ def LoadMameOutputsIni( iniFilename ):
   return mappings
 
 
-def LoadGameColorIni( iniFilename ):
-  config = ConfigParser.RawConfigParser()
-  config.optionxform = str  # make case sensitive
-  config.read(iniFilename)
-  colors = {}
-  for game in config.sections():
-    colors[game] = config.items(game)
-  return colors
 
 
 
 pinMapping = LoadPinMapping('LEDBlinkyInputMap.xml')
 
-mameOutputMappings = LoadMameOutputMapping('ButtonMap.xml')
 
 
-def LoadControlsXml(filename):
-  tree = ET.parse(filename)
-  root = tree.getroot()
-
-"""
-print(root.tag)
-for child in root:
-  #print(child.tag)
-  rom = child.get("romname")
-  players = child.get("numPlayers")
-
-  print( str(rom) + " " + str(players) )
-"""
 
 
-gamesColors = LoadGameColorIni('Colors.ini')
-defaultColors = LoadGameColorIni('ColorsDefault.ini')
-gameControls = LoadControlsXml('controls.xml')
 
-
-def FindGamePortsAndColors( game ):
-  if game in gamesColors:
-    colors = gamesColors[game]
-    print "found colors ",game
-  else:
-    colors = defaultColors['default']
-
-  if game in mameOutputMappings:
-    portMapping = mameOutputMappings[game]
-  else:
-    portMapping = mameOutputMappings['default']
-  
-  portsAndColors = [] 
-  for color in colors:
-    if color[0] in portMapping:
-      ports = portMapping[color[0]]  # we can have multiple led 'ports' mapped to the same mame output (more than one light off a single output)
-      for port in ports:
-        portsAndColors.append( (port, color[1]) )
-
-  print portsAndColors
-  return portsAndColors
 
 
 def TranslatePortsAndColorsToPins( portsAndColors ):
@@ -180,7 +115,7 @@ def TranslatePortsAndColorsToPins( portsAndColors ):
 
 
 
-portsAndColors = FindGamePortsAndColors( "rtype" )
+portsAndColors = gamedata.FindGamePortsAndColors( "rtype" )
 portSettings = TranslatePortsAndColorsToPins( portsAndColors )
 print portSettings
 
