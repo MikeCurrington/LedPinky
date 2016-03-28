@@ -18,7 +18,8 @@ class GameData(threading.Thread):
 
     self.loaded = false
 
-  def LoadGameColorIni( iniFilename ):
+
+  def LoadGameColorIni( self, iniFilename ):
     config = ConfigParser.RawConfigParser()
     config.optionxform = str  # make case sensitive
     config.read(iniFilename)
@@ -27,7 +28,7 @@ class GameData(threading.Thread):
       colors[game] = config.items(game)
     return colors
 
-  def LoadControlsXml(filename):
+  def LoadControlsXml(self, filename):
     tree = ET.parse(filename)
     root = tree.getroot()
 
@@ -41,8 +42,7 @@ class GameData(threading.Thread):
     print( str(rom) + " " + str(players) )
     """
 
-
-  def LoadMameOutputMapping( xmlFilename ):
+  def LoadMameOutputMapping( self, xmlFilename ):
     mappings = {}
     
     buttons = ET.parse( xmlFilename )
@@ -65,7 +65,7 @@ class GameData(threading.Thread):
     return mappings
 
 
-  def FindGamePortsAndColors( game ):
+  def FindGamePortsAndColors( self, game ):
     
     if !self.loaded:
       self.join()
