@@ -87,7 +87,7 @@ class LedWiz:
         self.wantedOnOff |= (1<<i)
       i = i+1
     if send:
-      self.SendUpdates( self )
+      self.SendUpdates()
 
 
   def ClearPins( self, send=True ):

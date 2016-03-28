@@ -4,12 +4,14 @@ import math
 RANGE = 100
 fRANGE = float(RANGE)
 
+MARQUEEPIN = 2
+
 class ArcadeGpio:
 
   def __init__(self):
     wiringpi.wiringPiSetup()
-    wiringpi.pinMode(0,1)
-    wiringpi.softPwmCreate(0, 0, RANGE) # set pin 0 to be software pwm and a range of 10 values
+    wiringpi.pinMode(MARQUEEPIN,1)
+    wiringpi.softPwmCreate(MARQUEEPIN, 0, RANGE) # set pin 0 to be software pwm and a range of 10 values
 
   def brightnesToLedPwm(self, brightness):
     if brightness <= 0:
@@ -21,7 +23,7 @@ class ArcadeGpio:
 
   def marqueeBrightness(self, brightness):
     pwm = self.brightnesToLedPwm( brightness )
-    wiringpi.softPwmWrite(0, pwm)
+    wiringpi.softPwmWrite(MARQUEEPIN, pwm)
 
 
 
