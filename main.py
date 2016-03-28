@@ -14,8 +14,8 @@ ledwiz = LedWiz()
 ledwiz.Connect()
 gpio = ArcadeGpio()
 
-gamedata = GameData()
-gamedata.Init( 'ColorsDefault.ini', 'Colors.ini', 'controls.xml')
+gamedata = GameData( 'ColorsDefault.ini', 'Colors.ini', 'controls.xml' )
+gamedata.run()
 
 marqueeBrightness = 100
 
@@ -95,9 +95,6 @@ def LoadMameOutputsIni( iniFilename ):
 
 
 pinMapping = LoadPinMapping('LEDBlinkyInputMap.xml')
-
-
-
 
 
 
