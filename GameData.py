@@ -5,7 +5,7 @@ class GameData(threading.Thread):
 
   def __init__( self, defaultColorsIniFilename, gameColorsIniFilename, gameControlsXmlFilename ):
     threading.Thread.__init__(self)
-    self.loaded = false
+    self.loaded = False
     self.defaultColorsIniFilename = defaultColorsIniFilename
     self.gameColorsIniFilename = gameColorsIniFilename
     self.gameControlsXmlFilename = gameControlsXmlFilename
@@ -16,7 +16,7 @@ class GameData(threading.Thread):
     self.gameControls = LoadControlsXml(self.gameControlsXmlFilename)
     self.mameOutputMappings = LoadMameOutputMapping('ButtonMap.xml')
 
-    self.loaded = false
+    self.loaded = True
 
   def LoadGameColorIni( iniFilename ):
     config = ConfigParser.RawConfigParser()
@@ -67,7 +67,7 @@ class GameData(threading.Thread):
 
   def FindGamePortsAndColors( game ):
     
-    if !self.loaded:
+    if self.loaded==False:
       self.join()
       raise Exception('StillLoading')
     
