@@ -112,12 +112,12 @@ def TranslatePortsAndColorsToPins( portsAndColors ):
 
 
 
-portsAndColors = gamedata.FindGamePortsAndColors( "rtype" )
-portSettings = TranslatePortsAndColorsToPins( portsAndColors )
-print portSettings
+#portsAndColors = gamedata.FindGamePortsAndColors( "rtype" )
+#portSettings = TranslatePortsAndColorsToPins( portsAndColors )
+#print portSettings
 
 ledwiz.ClearPins(False)
-ledwiz.SetPins(portSettings)
+#ledwiz.SetPins(portSettings)
 
 
 """

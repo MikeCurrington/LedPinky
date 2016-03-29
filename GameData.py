@@ -18,7 +18,6 @@ class GameData(threading.Thread):
 
     self.loaded = false
 
-
   def LoadGameColorIni( self, iniFilename ):
     config = ConfigParser.RawConfigParser()
     config.optionxform = str  # make case sensitive
@@ -32,15 +31,15 @@ class GameData(threading.Thread):
     tree = ET.parse(filename)
     root = tree.getroot()
 
-    """
-    print(root.tag)
+    controls = {}
     for child in root:
-    #print(child.tag)
-    rom = child.get("romname")
-    players = child.get("numPlayers")
-    
-    print( str(rom) + " " + str(players) )
-    """
+      #print(child.tag)
+      rom = child.get("romname")
+      players = int( child.get("numPlayers") )
+      alternating = (1 == int( child.get("alternating") ))
+      #print( str(rom) + " " + str(players) )
+      controls[game] = [players, alternating]
+    return controls
 
   def LoadMameOutputMapping( self, xmlFilename ):
     mappings = {}
@@ -64,31 +63,33 @@ class GameData(threading.Thread):
     
     return mappings
 
-
   def FindGamePortsAndColors( self, game ):
     
     if !self.loaded:
       self.join()
       raise Exception('StillLoading')
     
+    if gameControl in self.gameControls:
+      print "found controls ",gameControl
+    
     if game in self.gamesColors:
       colors = self.gamesColors[game]
       print "found colors ",game
     else:
       colors = self.defaultColors['default']
-                  
+    
     if game in self.mameOutputMappings:
       portMapping = self.mameOutputMappings[game]
     else:
       portMapping = self.mameOutputMappings['default']
-          
+    
     portsAndColors = []
     for color in colors:
       if color[0] in portMapping:
         ports = portMapping[color[0]]  # we can have multiple led 'ports' mapped to the same mame output (more than one light off a single output)
         for port in ports:
           portsAndColors.append( (port, color[1]) )
-              
+
     print portsAndColors
     return portsAndColors
 
