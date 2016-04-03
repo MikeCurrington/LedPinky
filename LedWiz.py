@@ -98,13 +98,15 @@ class LedWiz:
 
   def SetPins( self, pinNumberBrightnessPairs, send=True ):
     for pin in pinNumberBrightnessPairs:
-      if self.brightnesses[pin[0]] != pin[1]:
+      pinNum = pin[0]-1
+      pinBright = pin[1]
+      if self.brightnesses[pinNum] != pinBright:
         self.brightnessChanged = True
-        self.brightnesses[pin[0]] = pin[1]
-      if pin[1] > 0:
-        self.wantedOnOff |= (1<<pin[0])
+        self.brightnesses[pinNum] = pinBright
+      if pinBright > 0:
+        self.wantedOnOff |= (1<<pinNum)
       else:
-        self.wantedOnOff &= ~(1<<pin[0])
+        self.wantedOnOff &= ~(1<<pinNum)
     if send:
       self.SendUpdates()
 
