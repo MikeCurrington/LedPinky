@@ -41,6 +41,10 @@ class LedHttp:
           if self.path.startswith("/brightness="):
             brightness = int( self.path[12:] )
           self.controlHandler.SetMarqueeBrightness(brightness)
+          response = 'ok'
+        elif self.path.startswith("/demo"):
+          self.controlHandler.SetDemo()
+          response = 'ok'
         self.send_response(200)
         self.send_header('Content-type','text/html')
         self.end_headers()

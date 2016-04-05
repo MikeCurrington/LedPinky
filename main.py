@@ -1,5 +1,7 @@
 import xml.etree.ElementTree as ET
 import ConfigParser
+import threading
+import time
 
 import SimpleHTTPServer
 import SocketServer
@@ -39,6 +41,38 @@ def MarqueeFlicker( gpio ):
   gpio.marqueeBrightness( marqueeBrightness )
 
 
+
+class LightSequence( threading.Thread ):
+  def __init__(self, pins):
+    threading.Thread.__init__(self)
+    self.pins = pins
+    self.running = True
+    self.seq = 0
+    self.brightnesses = []
+    for pin in pins:
+      self.brightnesses.append( [pin, 0] )
+
+  def run(self):
+    while( self.running ):
+      for x in xrange(len(self.brightnesses)):
+        dist = x - self.seq
+        if dist > self.seq/2:
+          dist = dist - self.seq
+        elif dist < -self.seq/2:
+          dist = dist + self.seq
+        if dist < 0:
+          dist = -dist 
+        b = 63 - 8 * dist
+        if b < 0:
+          b = 0
+        self.brightnesses[x][1] = b
+      ledwiz.SetPins( self.brightnesses, True )
+      time.sleep( 0.1 )
+      self.seq = self.seq + 1
+      if self.seq > len(self.brightnesses):
+        self.seq = 0
+    while self.running == False:
+      time.sleep(0.5)
 
 def LoadPinMapping( xmlFilename ):
   pins = ET.parse( xmlFilename )
@@ -94,9 +128,6 @@ def LoadMameOutputsIni( iniFilename ):
 
 
 
-pinMapping = LoadPinMapping('LEDBlinkyInputMap.xml')
-
-
 
 
 
@@ -110,6 +141,23 @@ def TranslatePortsAndColorsToPins( portsAndColors ):
       pins.append( ( m[0]['pin'], 63 ) )
   return pins
 
+def GetAllPins():
+  pins = []
+  for pinName,pin in pinMapping.iteritems():
+    print pinName, pin
+    m = pin['pins']
+    if len(m) == 1:
+      # assume this is a single color port (or single use)
+      pins.append( m[0]['pin'] )
+  return pins
+
+
+
+pinMapping = LoadPinMapping('LEDBlinkyInputMap.xml')
+
+sequenceThread = LightSequence( GetAllPins() )
+sequenceThread.daemon = True
+sequenceThread.start()
 
 
 #portsAndColors = gamedata.FindGamePortsAndColors( "rtype" )
@@ -137,9 +185,10 @@ class HttpHandler:
     self.ledhttp.StartServer()
 
   def SetGame(self, gamename):
-    portsAndColors = FindGamePortsAndColors( gamename )
+    portsAndColors = gamedata.FindGamePortsAndColors( gamename )
     portSettings = TranslatePortsAndColorsToPins( portsAndColors )
     print portSettings
+    sequenceThread.running = False
 
     ledwiz.ClearPins(False)
     ledwiz.SetPins(portSettings)
@@ -155,8 +204,11 @@ class HttpHandler:
     else:
       ledwiz.ClearPins(False)
       MarqueeFlicker(gpio)
-      ledwiz.SetAllPins( [129,129,129,129,129,129,129,129,129,129,129,129,129,129,129,129], True )
+      ledwiz.SetAllPins( [129,129,129,129,129,129,129,129,129,129,129,129,129,129,129,129,129,129,129,129,129,129,129,129,129,129,129,129,129,129,129,129], True )
 
+  def SetDemo( self ):
+    ledwiz.SetAllPins( [129,129,129,129,129,129,129,129,129,129,129,129,129,129,129,129,129,129,129,129,129,129,129,129,129,129,129,129,129,129,129,129], True )
+    sequenceThread.running = True
 
 ledhttp = HttpHandler()
 ledhttp.StartServer()

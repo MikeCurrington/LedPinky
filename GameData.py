@@ -19,6 +19,7 @@ class GameData(threading.Thread):
     self.mameOutputMappings = self.LoadMameOutputMapping('ButtonMap.xml')
     self.loaded = True
 
+
   def LoadGameColorIni( self, iniFilename ):
     config = ConfigParser.RawConfigParser()
     config.optionxform = str  # make case sensitive
@@ -28,19 +29,22 @@ class GameData(threading.Thread):
       colors[game] = config.items(game)
     return colors
 
+
   def LoadControlsXml(self, filename):
     tree = ET.parse(filename)
     root = tree.getroot()
 
     controls = {}
     for child in root:
-      #print(child.tag)
-      rom = child.get("romname")
-      players = int( child.get("numPlayers") )
-      alternating = (1 == int( child.get("alternating") ))
-      #print( str(rom) + " " + str(players) )
-      controls[game] = [players, alternating]
+      if child.tag=='game':
+        rom = child.get("romname")
+        print rom
+        players = int( child.get("numPlayers") )
+        alternating = (1 == int( child.get("alternating") ))
+        #print( str(rom) + " " + str(players) )
+        controls[rom] = [players, alternating]
     return controls
+
 
   def LoadMameOutputMapping( self, xmlFilename ):
     mappings = {}
@@ -64,14 +68,28 @@ class GameData(threading.Thread):
     
     return mappings
 
+
+  def GetPlayerFromControlName( self, buttonid ):
+    if buttonid[0] == 'P' and buttonid[1].isdigit():
+      print buttonid[1]
+      return int( buttonid[1] )
+    else:
+      return 0
+
   def FindGamePortsAndColors( self, game ):
     
     if self.loaded==False:
       self.join()
       raise Exception('StillLoading')
-    
-    if gameControl in self.gameControls:
+   
+    maxControllers = 100 
+    if game in self.gameControls:
+      gameControl = self.gameControls[game]
       print "found controls ",gameControl
+      if gameControl[1]==1:
+        maxControllers = 1  # alternating
+      else:
+        maxControllers = gameControl[0]
     
     if game in self.gamesColors:
       colors = self.gamesColors[game]
@@ -86,12 +104,12 @@ class GameData(threading.Thread):
     
     portsAndColors = []
     for color in colors:
-      if color[0] in portMapping:
+      if self.GetPlayerFromControlName(color[0]) <= maxControllers and color[0] in portMapping:
         ports = portMapping[color[0]]  # we can have multiple led 'ports' mapped to the same mame output (more than one light off a single output)
         for port in ports:
           portsAndColors.append( (port, color[1]) )
 
-    print portsAndColors
+    print colors, portsAndColors
     return portsAndColors
 
 
