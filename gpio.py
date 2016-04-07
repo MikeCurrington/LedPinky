@@ -4,7 +4,8 @@ import math
 RANGE = 100
 fRANGE = float(RANGE)
 
-MARQUEEPIN = 2
+MARQUEEPIN = 1
+FANPIN = 2
 
 class ArcadeGpio:
 

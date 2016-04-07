@@ -6,8 +6,8 @@
     <date name="03/02/2016 10:12:02"/>
   </meta>
   <ledController type="1" id="1" name="LEDWiz">
-    <port number="1" label="P1B2" type="S" inputCodes=""/>
-    <port number="2" label="P1B5" type="S" inputCodes="KEYCODE_ENTER"/>
+    <port number="1" label="P1B5" type="S" inputCodes=""/>
+    <port number="2" label="P1B2" type="S" inputCodes="KEYCODE_ENTER"/>
     <port number="3" label="FAN1" type="S" inputCodes=""/>
     <port number="4" label="MARQUEE" type="S" inputCodes=""/>
     <port number="5" label="" type="" inputCodes=""/>
