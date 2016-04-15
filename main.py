@@ -84,6 +84,9 @@ def LoadPinMapping( xmlFilename ):
 
   pincontrollers = pinroot.iter('ledController')
   for pincontroller in pincontrollers:
+    
+    device = pincontroller.get("type")
+    
     for pin in pincontroller:
       label = pin.get('label')
       if label == "":
@@ -95,7 +98,7 @@ def LoadPinMapping( xmlFilename ):
       usedPins.append( pinnumber )
       if label not in pinMapping:
         pinMapping[label] = { "pins":[] }
-      pinMapping[label]["pins"].append( {"type":pin.get('type'), "pin":pinnumber} )
+      pinMapping[label]["pins"].append( {"type":pin.get('type'), "pin":pinnumber, "device":device} )
 
       print pin.get('number')
       pin.get('label')
