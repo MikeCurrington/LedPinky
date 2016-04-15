@@ -20,6 +20,7 @@ gamedata = GameData( 'ColorsDefault.ini', 'Colors.ini', 'controls.xml' )
 gamedata.run()
 
 marqueeBrightness = 100
+fanspeed = 0
 
 def MarqueeFlicker( gpio ):
   gpio.marqueeBrightness( marqueeBrightness )
@@ -197,10 +198,15 @@ class HttpHandler:
     gpio.marqueeBrightness( brightness )
     marqueeBrightness = brightness
 
+  def SetFanSpeed( self, speed ):
+    gpio.fanSpeed( speed )
+    fanspeed = speed
+
   def SetSleep( self, sleep ):
     if sleep==True:
       ledwiz.ClearPins(True)
       gpio.marqueeBrightness(0)
+      gpio.fanSpeed(0)
     else:
       ledwiz.ClearPins(False)
       MarqueeFlicker(gpio)

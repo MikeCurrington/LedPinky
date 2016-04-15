@@ -42,6 +42,12 @@ class LedHttp:
             brightness = int( self.path[12:] )
           self.controlHandler.SetMarqueeBrightness(brightness)
           response = 'ok'
+        elif self.path.startswith("/fan"):
+          fanspeed = 100
+          if self.path.startswith("/fan="):
+            fanspeed = int( self.path[5:] )
+          self.controlHandler.SetFanSpeed(fanspeed)
+          response = 'ok'
         elif self.path.startswith("/demo"):
           self.controlHandler.SetDemo()
           response = 'ok'
