@@ -12,10 +12,18 @@ from LedHttp import LedHttp
 from gpio import ArcadeGpio
 from GameData import GameData
 from PinMap import PinMap
+from DeviceManager import DeviceManager
 
 ledwiz = LedWiz()
 ledwiz.Connect()
 gpio = ArcadeGpio()
+
+devices = DeviceManager()
+devices.Add( ledwiz, "LEDWiz" )
+devices.Add( gpio, "GPIO" )
+device.ClearPins()
+
+
 
 gamedata = GameData( 'ColorsDefault.ini', 'Colors.ini', 'controls.xml' )
 gamedata.run()
@@ -101,34 +109,14 @@ def LoadMameOutputsIni( iniFilename ):
 
 
 
-
-
-
-
-
 pinMapping = PinMap('LEDBlinkyInputMap.xml')
 
 sequenceThread = LightSequence( pinMapping.GetAllPins() )
 sequenceThread.daemon = True
 sequenceThread.start()
 
-
-#portsAndColors = gamedata.FindGamePortsAndColors( "rtype" )
-#portSettings = TranslatePortsAndColorsToPins( portsAndColors )
-#print portSettings
-
 ledwiz.ClearPins(False)
-#ledwiz.SetPins(portSettings)
 
-
-"""
-i=0
-while(True):
-  time.sleep(1)
-  i = i+1
-
-exit(0)
-"""
 
 class HttpHandler:
   def __init__(self):
@@ -143,8 +131,11 @@ class HttpHandler:
     print portSettings
     sequenceThread.running = False
 
-    ledwiz.ClearPins(False)
-    ledwiz.SetPins(portSettings)
+    devices.ClearPins(False)
+    devices.SetPins(portSettings)
+    
+    #ledwiz.ClearPins(False)
+    #ledwiz.SetPins(portSettings)
 
   def SetMarqueeBrightness( self, brightness ):
     gpio.marqueeBrightness( brightness )
@@ -168,9 +159,9 @@ class HttpHandler:
     ledwiz.SetAllPins( [129,129,129,129,129,129,129,129,129,129,129,129,129,129,129,129,129,129,129,129,129,129,129,129,129,129,129,129,129,129,129,129], True )
     sequenceThread.running = True
 
+
 ledhttp = HttpHandler()
 ledhttp.StartServer()
-
 
 mameOutputsFilename = '/tmp/sdlmame_out'
 os.mkfifo(mameOutputsFilename)
@@ -178,9 +169,5 @@ os.mkfifo(mameOutputsFilename)
 mameOutputsFile = open(mameOutputsFilename, "r")
 for nextfetch in mameOutputsFilename:
     print nextfetch
-
-
-
-
 
 

@@ -40,10 +40,11 @@ class PinMap:
       m = self.pinMapping[ portAndColor[0] ]['pins']
       if len(m) == 1:
         # assume this is a single color port (or single use)
-        pins.append( ( m[0]['pin'], 63 ) )
+        pins.append( ( m[0]['device'], m[0]['pin'], 63 ) )
       else:
         print "Unsupported multicolor led"
     return pins
+
 
   def GetAllPins( self ):
     pins = []
@@ -52,7 +53,7 @@ class PinMap:
     m = pin['pins']
     if len(m) == 1:
       # assume this is a single color port (or single use)
-      pins.append( m[0]['pin'] )
+      pins.append( ( m[0]['device'], m[0]['pin'] ) )
     return pins
 
 
