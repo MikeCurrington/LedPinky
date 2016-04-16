@@ -4,7 +4,7 @@ import ConfigParser
 
 class PinMap:
 
-  def __init__( xmlFilename ):
+  def __init__( self, xmlFilename ):
     pins = ET.parse( xmlFilename )
     pinroot = pins.getroot()
 
@@ -25,7 +25,7 @@ class PinMap:
         if pinnumber in usedPins:
           raise Exception('pin defined twice')
         usedPins.append( pinnumber )
-        if label not in pinMapping:
+        if label not in self.pinMapping:
           self.pinMapping[label] = { "pins":[] }
         self.pinMapping[label]["pins"].append( {"type":pin.get('type'), "pin":pinnumber, "device":device} )
 
@@ -40,8 +40,9 @@ class PinMap:
       m = self.pinMapping[ portAndColor[0] ]['pins']
       if len(m) == 1:
         # assume this is a single color port (or single use)
-        print "1"
         pins.append( ( m[0]['pin'], 63 ) )
+      else:
+        print "Unsupported multicolor led"
     return pins
 
   def GetAllPins( self ):
