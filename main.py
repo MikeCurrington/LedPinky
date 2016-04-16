@@ -11,6 +11,7 @@ from LedWiz import LedWiz
 from LedHttp import LedHttp
 from gpio import ArcadeGpio
 from GameData import GameData
+from PinMap import PinMap
 
 ledwiz = LedWiz()
 ledwiz.Connect()
@@ -75,38 +76,6 @@ class LightSequence( threading.Thread ):
     while self.running == False:
       time.sleep(0.5)
 
-def LoadPinMapping( xmlFilename ):
-  pins = ET.parse( xmlFilename )
-  pinroot = pins.getroot()
-
-  pinMapping = {}
-  usedPins = []
-
-  pincontrollers = pinroot.iter('ledController')
-  for pincontroller in pincontrollers:
-    
-    device = pincontroller.get("type")
-    
-    for pin in pincontroller:
-      label = pin.get('label')
-      if label == "":
-        continue
-
-      pinnumber = int( pin.get('number') )
-      if pinnumber in usedPins:
-        raise Exception('pin defined twice')
-      usedPins.append( pinnumber )
-      if label not in pinMapping:
-        pinMapping[label] = { "pins":[] }
-      pinMapping[label]["pins"].append( {"type":pin.get('type'), "pin":pinnumber, "device":device} )
-
-      print pin.get('number')
-      pin.get('label')
-      pin.get('type')
-
-  return pinMapping
-
-
 def LoadMameOutputsIni( iniFilename ):
 
   mappings = {}
@@ -135,31 +104,11 @@ def LoadMameOutputsIni( iniFilename ):
 
 
 
-def TranslatePortsAndColorsToPins( portsAndColors ):
-  pins = []
-  for portAndColor in portsAndColors:
-    m = pinMapping[ portAndColor[0] ]['pins']
-    if len(m) == 1:
-      # assume this is a single color port (or single use)
-      print "1"
-      pins.append( ( m[0]['pin'], 63 ) )
-  return pins
-
-def GetAllPins():
-  pins = []
-  for pinName,pin in pinMapping.iteritems():
-    print pinName, pin
-    m = pin['pins']
-    if len(m) == 1:
-      # assume this is a single color port (or single use)
-      pins.append( m[0]['pin'] )
-  return pins
 
 
+pinMapping = PinMap('LEDBlinkyInputMap.xml')
 
-pinMapping = LoadPinMapping('LEDBlinkyInputMap.xml')
-
-sequenceThread = LightSequence( GetAllPins() )
+sequenceThread = LightSequence( pinMapping.GetAllPins() )
 sequenceThread.daemon = True
 sequenceThread.start()
 
@@ -190,7 +139,7 @@ class HttpHandler:
 
   def SetGame(self, gamename):
     portsAndColors = gamedata.FindGamePortsAndColors( gamename )
-    portSettings = TranslatePortsAndColorsToPins( portsAndColors )
+    portSettings = pinMapping.TranslatePortsAndColorsToPins( portsAndColors )
     print portSettings
     sequenceThread.running = False
 
