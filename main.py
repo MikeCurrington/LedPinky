@@ -19,9 +19,9 @@ ledwiz.Connect()
 gpio = ArcadeGpio()
 
 devices = DeviceManager()
-devices.Add( ledwiz, "LEDWiz" )
-devices.Add( gpio, "GPIO" )
-device.ClearPins()
+devices.Add( "LEDWIZ", ledwiz )
+devices.Add( "GPIO", gpio )
+devices.ClearPins()
 
 
 
@@ -76,7 +76,7 @@ class LightSequence( threading.Thread ):
         if b < 0:
           b = 0
         self.brightnesses[x][1] = b
-      ledwiz.SetPins( self.brightnesses, True )
+      devices.SetPins( self.brightnesses, True )
       time.sleep( 0.1 )
       self.seq = self.seq + 1
       if self.seq > len(self.brightnesses):
@@ -111,7 +111,7 @@ def LoadMameOutputsIni( iniFilename ):
 
 pinMapping = PinMap('LEDBlinkyInputMap.xml')
 
-sequenceThread = LightSequence( pinMapping.GetAllPins() )
+sequenceThread = LightSequence( pinMapping.GetAllPinsOfType('S') )
 sequenceThread.daemon = True
 sequenceThread.start()
 

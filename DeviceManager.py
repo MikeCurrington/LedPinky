@@ -4,19 +4,19 @@ class DeviceManager:
   def __init__(self):
     self.devices = {}
   
-  def Add( self, device, name ):
-    self.devices[name] = device
+  def Add( self, deviceName, device ):
+    self.devices[deviceName] = device
 
-  def ClearPins(self):
-    for device in self.devices:
-      device.ClearPins()
+  def ClearPins(self, apply = True):
+    for deviceName, device in self.devices.iteritems():
+      device.ClearPins( apply )
 
-  def SetPins(self, devicesPortsSettings):
+  def SetPins(self, devicesPortsSettings, apply = True):
     devices = {}
     for pin in devicesPortsSettings:
       if pin[0] in devices:
         devices[pin[0]].add( ( pin[1], pin[2] ) )
 
     for device,portsSettings in devices.iteritems():
-      device.SetPins( portsSettings )
+      device.SetPins( portsSettings, apply )
 

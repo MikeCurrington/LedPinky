@@ -9,12 +9,14 @@ class PinMap:
     pinroot = pins.getroot()
 
     self.pinMapping = {}
-    usedPins = []
+    usedPins = {} 
 
     pincontrollers = pinroot.iter('ledController')
     for pincontroller in pincontrollers:
       
       device = pincontroller.get("type")
+      if device not in usedPins:
+        usedPins[device] = []
       
       for pin in pincontroller:
         label = pin.get('label')
@@ -22,16 +24,14 @@ class PinMap:
           continue
 
         pinnumber = int( pin.get('number') )
-        if pinnumber in usedPins:
+        if pinnumber in usedPins[device]:
           raise Exception('pin defined twice')
-        usedPins.append( pinnumber )
+        usedPins[device].append( pinnumber )
         if label not in self.pinMapping:
           self.pinMapping[label] = { "pins":[] }
         self.pinMapping[label]["pins"].append( {"type":pin.get('type'), "pin":pinnumber, "device":device} )
 
-        print pin.get('number')
-        pin.get('label')
-        pin.get('type')
+        print "added ", pin.get('label'), " ", pin.get('type')
 
 
   def TranslatePortsAndColorsToPins( self, portsAndColors ):
@@ -49,12 +49,20 @@ class PinMap:
   def GetAllPins( self ):
     pins = []
     for pinName,pin in self.pinMapping.iteritems():
-      print pinName, pin
-    m = pin['pins']
-    if len(m) == 1:
-      # assume this is a single color port (or single use)
-      pins.append( ( m[0]['device'], m[0]['pin'] ) )
+      m = pin['pins']
+      if len(m) == 1:
+        # assume this is a single color port (or single use)
+        pins.append( ( m[0]['device'], m[0]['pin'] ) )
     return pins
 
+  def GetAllPinsOfType( self, pintype ):
+    pins = []
+    for pinName,pin in self.pinMapping.iteritems():
+      m = pin['pins']
+      if len(m) == 1 and m[0]['type'] == pintype:
+        # assume this is a single color port (or single use)
+        pins.append( ( m[0]['device'], m[0]['pin'] ) )
+    return pins
+ 
 
 

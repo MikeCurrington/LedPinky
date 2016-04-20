@@ -13,6 +13,11 @@ HARD_PWM_RANGE = 1024
 class ArcadeGpio:
 
   def __init__(self):
+    self.brightnesses = []
+    self.brightnessChanged = False
+    self.currentOnOff = 0
+    self.wantedOnOff = 0
+
     wiringpi.wiringPiSetup()
 
     wiringpi.pinMode(MARQUEEPIN,1)
@@ -58,7 +63,7 @@ class ArcadeGpio:
         self.brightnesses[i] = pin
         self.brightnessChanged = True
       i = i+1
-    for ii in xrange(i,self.brightnesses.length):
+    for ii in xrange(i,len(self.brightnesses)):
       if self.brightnesses[ii] != 0:
         self.brightnesses[ii] = 0
         self.brightnessChanged = True
@@ -66,7 +71,7 @@ class ArcadeGpio:
       self.SendUpdates( self )
 
   def ClearPins( self, send=True ):
-    for i in xrange(self.brightnesses.length):
+    for i in xrange(len(self.brightnesses)):
       if self.brightnesses[i] != 0:
         self.brightnesses[i] = 0
         self.brightnessChanged = True
@@ -85,6 +90,11 @@ class ArcadeGpio:
     if send:
       self.SendUpdates()
 
+  def SendUpdates( self ):
+    if self.brightnessChanged:
+      self.brightnessChanged = False
+    if self.wantedOnOff != self.currentOnOff:
+      self.currentOnOff = self.wantedOnOff
 
 
 if __name__ == '__main__':
