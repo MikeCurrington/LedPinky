@@ -12,11 +12,13 @@ class DeviceManager:
       device.ClearPins( apply )
 
   def SetPins(self, devicesPortsSettings, apply = True):
-    devices = {}
+    devicesOut = {}
     for pin in devicesPortsSettings:
-      if pin[0] in devices:
-        devices[pin[0]].add( ( pin[1], pin[2] ) )
+      if pin[0] in self.devices:
+        if pin[0] not in devicesOut:
+          devicesOut[pin[0]] = []
+        devicesOut[pin[0]].append( ( pin[1], pin[2] ) )
 
-    for device,portsSettings in devices.iteritems():
-      device.SetPins( portsSettings, apply )
+    for deviceName,portsSettings in devicesOut.iteritems():
+      self.devices[deviceName].SetPins( portsSettings, apply )
 

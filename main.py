@@ -31,58 +31,6 @@ gamedata.run()
 marqueeBrightness = 100
 fanspeed = 0
 
-def MarqueeFlicker( gpio ):
-  gpio.marqueeBrightness( marqueeBrightness )
-  time.sleep(0.1)
-  gpio.marqueeBrightness( 0 )
-  time.sleep(0.5)
-  gpio.marqueeBrightness( marqueeBrightness )
-  time.sleep(0.1)
-  gpio.marqueeBrightness( 0 )
-  time.sleep(0.25)
-  gpio.marqueeBrightness( marqueeBrightness )
-  time.sleep(0.1)
-  gpio.marqueeBrightness( 0 )
-  time.sleep(0.25)
-  gpio.marqueeBrightness( marqueeBrightness )
-  time.sleep(0.1)
-  gpio.marqueeBrightness( marqueeBrightness / 10 )
-  time.sleep(0.25)
-  gpio.marqueeBrightness( marqueeBrightness )
-
-
-
-class LightSequence( threading.Thread ):
-  def __init__(self, pins):
-    threading.Thread.__init__(self)
-    self.pins = pins
-    self.running = True
-    self.seq = 0
-    self.brightnesses = []
-    for pin in pins:
-      self.brightnesses.append( [pin, 0] )
-
-  def run(self):
-    while( self.running ):
-      for x in xrange(len(self.brightnesses)):
-        dist = x - self.seq
-        if dist > self.seq/2:
-          dist = dist - self.seq
-        elif dist < -self.seq/2:
-          dist = dist + self.seq
-        if dist < 0:
-          dist = -dist 
-        b = 63 - 8 * dist
-        if b < 0:
-          b = 0
-        self.brightnesses[x][1] = b
-      devices.SetPins( self.brightnesses, True )
-      time.sleep( 0.1 )
-      self.seq = self.seq + 1
-      if self.seq > len(self.brightnesses):
-        self.seq = 0
-    while self.running == False:
-      time.sleep(0.5)
 
 def LoadMameOutputsIni( iniFilename ):
 
@@ -111,7 +59,10 @@ def LoadMameOutputsIni( iniFilename ):
 
 pinMapping = PinMap('LEDBlinkyInputMap.xml')
 
-sequenceThread = LightSequence( pinMapping.GetAllPinsOfType('S') )
+sequencer = Sequencer()
+sequenceDemo = SequenceLightChase( pinMapping.GetAllPinsOfType('S') )
+sequencer.Add( sequencerDemo )
+
 sequenceThread.daemon = True
 sequenceThread.start()
 
@@ -156,7 +107,6 @@ class HttpHandler:
       ledwiz.SetAllPins( [129,129,129,129,129,129,129,129,129,129,129,129,129,129,129,129,129,129,129,129,129,129,129,129,129,129,129,129,129,129,129,129], True )
 
   def SetDemo( self ):
-    ledwiz.SetAllPins( [129,129,129,129,129,129,129,129,129,129,129,129,129,129,129,129,129,129,129,129,129,129,129,129,129,129,129,129,129,129,129,129], True )
     sequenceThread.running = True
 
 
