@@ -1,19 +1,20 @@
+import time
+import threading
+from DeviceManager import DeviceManager
 
 
 
 class Sequencer( threading.Thread ):
-  def __init__(self, pins):
+  def __init__(self, devices):
     threading.Thread.__init__(self)
     self.running = True
     self.quit = False
     self.daemon = True
-
+    self.devices = devices
     self.sequences = []
-
 
   def Add( self, sequence ):
     self.sequences.append( sequence )
-
 
   def run(self):
     timeUntilNext = 0.0
@@ -24,7 +25,7 @@ class Sequencer( threading.Thread ):
       while( self.running ):
 
         currentTime = time.clock()
-        shortestWaitTime = 1.0  # check back in every second (saves us having to interrupt the wait when we add a new sequence) !
+        shortestWaitTime = 0.5  # check back at least every half second (saves us having to interrupt the wait when we add a new sequence) !
         for sequence in self.sequences:
           if sequence not in sequenceNextEventTimes:
             sequenceNextEventTimes[sequence] = currentTime

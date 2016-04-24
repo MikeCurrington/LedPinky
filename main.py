@@ -1,11 +1,8 @@
 import xml.etree.ElementTree as ET
 import ConfigParser
-import threading
-import time
 
 import SimpleHTTPServer
 import SocketServer
-import time
 import os
 from LedWiz import LedWiz
 from LedHttp import LedHttp
@@ -13,6 +10,7 @@ from gpio import ArcadeGpio
 from GameData import GameData
 from PinMap import PinMap
 from DeviceManager import DeviceManager
+from Sequencer import Sequencer
 
 ledwiz = LedWiz()
 ledwiz.Connect()
@@ -22,8 +20,6 @@ devices = DeviceManager()
 devices.Add( "LEDWIZ", ledwiz )
 devices.Add( "GPIO", gpio )
 devices.ClearPins()
-
-
 
 gamedata = GameData( 'ColorsDefault.ini', 'Colors.ini', 'controls.xml' )
 gamedata.run()
@@ -59,12 +55,11 @@ def LoadMameOutputsIni( iniFilename ):
 
 pinMapping = PinMap('LEDBlinkyInputMap.xml')
 
-sequencer = Sequencer()
 sequenceDemo = SequenceLightChase( pinMapping.GetAllPinsOfType('S') )
-sequencer.Add( sequencerDemo )
 
-sequenceThread.daemon = True
-sequenceThread.start()
+sequencer = Sequencer( devices )
+sequencer.Add( sequencerDemo )
+sequencer.start()
 
 ledwiz.ClearPins(False)
 

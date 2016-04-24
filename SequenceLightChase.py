@@ -1,6 +1,8 @@
+
+
 class SequenceLightChase( SequenceBase ):
   def __init__(self, pins):
-    base(SequenceBase)
+    super(SequenceLightChase, self).__init__(pins)
     self.seq = 0
     self.brightnesses = []
     for pin in pins:
