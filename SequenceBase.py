@@ -1,5 +1,5 @@
 
-class SequenceBase:
+class SequenceBase(object):
   def __init__(self, pins):
     self.pins = pins
     self.running = True
