@@ -1,13 +1,13 @@
 
-
-
-class SequenceBase( threading.Thread ):
+class SequenceBase:
   def __init__(self, pins):
     self.pins = pins
     self.running = True
     self.quit = False
     self.daemon = True
 
-  def Tick(self, timeElapsed):
-    return []
+  def ProcessNext(self):
+    return 1.0
 
+  def GetPinsChanged(self):
+    return []
