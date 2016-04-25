@@ -11,6 +11,7 @@ from GameData import GameData
 from PinMap import PinMap
 from DeviceManager import DeviceManager
 from Sequencer import Sequencer
+from SequenceLightChase import SequenceLightChase
 
 ledwiz = LedWiz()
 ledwiz.Connect()
