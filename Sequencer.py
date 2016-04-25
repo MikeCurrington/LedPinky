@@ -18,7 +18,7 @@ class Sequencer( threading.Thread ):
 
   def run(self):
     timeUntilNext = 0.0
-    sequenceNextEventTimes = 0.0
+    sequenceNextEventTimes = {}
 
     while( self.quit == False ):
       timeOfNextEvent = time.clock()

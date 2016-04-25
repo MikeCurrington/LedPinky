@@ -59,7 +59,7 @@ pinMapping = PinMap('LEDBlinkyInputMap.xml')
 sequenceDemo = SequenceLightChase( pinMapping.GetAllPinsOfType('S') )
 
 sequencer = Sequencer( devices )
-sequencer.Add( sequencerDemo )
+sequencer.Add( sequenceDemo )
 sequencer.start()
 
 ledwiz.ClearPins(False)
