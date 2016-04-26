@@ -35,16 +35,13 @@ class Sequencer( threading.Thread ):
             if waitTime < shortestWaitTime:
               shortestWaitTime = waitTime
             pinsChanged = sequence.GetPinsChanged()
-            if length(pinsChanged) > 0:
+            if len(pinsChanged) > 0:
               # we could collect all the pins before setting but for now lets set seperately for each sequence and let them fight!
-              devices.SetPins( pinsChanged, True )
+              self.devices.SetPins( pinsChanged, True )
 
         if shortestWaitTime > 0.0:
           time.sleep( shortestWaitTime )
         
-        self.seq = self.seq + 1
-        if self.seq > len(self.brightnesses):
-          self.seq = 0
       while self.running == False:
         time.sleep(0.5)
 

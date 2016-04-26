@@ -76,7 +76,7 @@ class HttpHandler:
     portsAndColors = gamedata.FindGamePortsAndColors( gamename )
     portSettings = pinMapping.TranslatePortsAndColorsToPins( portsAndColors )
     print portSettings
-    sequenceThread.running = False
+    sequencer.running = False
 
     devices.ClearPins(False)
     devices.SetPins(portSettings)
