@@ -57,9 +57,11 @@ def LoadMameOutputsIni( iniFilename ):
 pinMapping = PinMap('LEDBlinkyInputMap.xml')
 
 sequenceDemo = SequenceLightChase( pinMapping.GetAllPinsOfType('S') )
+marqueeOn = SequenceFlicker( pinMapping.GetAllPinsOfType('M') )
 
 sequencer = Sequencer( devices )
 sequencer.Add( sequenceDemo )
+sequencer.Add( marqueeOn )
 sequencer.start()
 
 ledwiz.ClearPins(False)

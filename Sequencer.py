@@ -30,7 +30,8 @@ class Sequencer( threading.Thread ):
           if sequence not in sequenceNextEventTimes:
             sequenceNextEventTimes[sequence] = currentTime
           if sequenceNextEventTimes[sequence] <= currentTime:
-            sequenceNextEventTimes[sequence] += sequence.ProcessNext( )
+            timeUntilNext = sequence.ProcessNext( )
+            sequenceNextEventTimes[sequence] += timeUntilNext
             waitTime = sequenceNextEventTimes[sequence] - currentTime
             if waitTime < shortestWaitTime:
               shortestWaitTime = waitTime
