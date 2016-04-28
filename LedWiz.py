@@ -4,6 +4,9 @@ import sys
 
 class LedWiz:
 
+  def __init__(self, defaultPins):
+    pass
+
   #input is a 5 byte list
   def  LWZ_SBA (self, input):
      #find device
@@ -51,7 +54,7 @@ class LedWiz:
         self.currentPulseSpeed = self.wantedPulseSpeed
       
         sbaMsg = [64,(self.currentOnOff>>0)&0xff,(self.currentOnOff>>8)&0xff,(self.currentOnOff>>16)&0xff,(self.currentOnOff>>24)&0xff,self.wantedPulseSpeed,0,0]
-        print sbaMsg
+        #print sbaMsg
 
         #send message to device
         self.device.ctrl_transfer(0x21, 0x09, 0x0200, 0, sbaMsg)
@@ -98,7 +101,7 @@ class LedWiz:
 
   def SetPins( self, pinNumberBrightnessPairs, send=True ):
     for pin in pinNumberBrightnessPairs:
-      print pin
+      #print pin
       pinNum = pin[0]-1
       pinBright = pin[1]
       if self.brightnesses[pinNum] != pinBright:

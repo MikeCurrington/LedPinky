@@ -12,11 +12,11 @@ HARD_PWM_RANGE = 1024
 
 class ArcadeGpio:
 
-  def __init__(self):
-    self.brightnesses = []
-    self.brightnessChanged = False
-    self.currentOnOff = 0
-    self.wantedOnOff = 0
+  def __init__(self, outputPins):
+    self.brightnesses = {}
+    self.brightnessesChanged = {}
+    for pin in outputPins:
+      self.brightnesses[pin[1]] = 0
 
     wiringpi.wiringPiSetup()
 
@@ -56,46 +56,30 @@ class ArcadeGpio:
     wiringpi.pwmWrite(FANPIN, pwm*HARD_PWM_RANGE/RANGE)
 
 
-  def SetAllPins( self, pins, send=True ):
-    i = 0
-    for pin in pins:
-      if self.brightnesses[i] != pin:
-        self.brightnesses[i] = pin
-        self.brightnessChanged = True
-      i = i+1
-    for ii in xrange(i,len(self.brightnesses)):
-      if self.brightnesses[ii] != 0:
-        self.brightnesses[ii] = 0
-        self.brightnessChanged = True
-    if send:
-      self.SendUpdates( self )
-
   def ClearPins( self, send=True ):
-    for i in xrange(len(self.brightnesses)):
-      if self.brightnesses[i] != 0:
-        self.brightnesses[i] = 0
-        self.brightnessChanged = True
+    for pin,oldBright in self.brightnesses.iteritems():
+      if self.brightnesses[pin] != 0:
+        self.brightnesses[pin] = 0
+        self.brightnessesChanged[pin] = pin
     if send:
       self.SendUpdates()
 
   def SetPins( self, pinNumberBrightnessPairs, send=True ):
     for pin in pinNumberBrightnessPairs:
-      if self.brightnesses[pin[0]] != pin[1]:
-        self.brightnessChanged = True
-        self.brightnesses[pin[0]] = pin[1]
-      if pin[1] > 0:
-        self.wantedOnOff |= (1<<pin[0])
-      else:
-        self.wantedOnOff &= ~(1<<pin[0])
+      if pin[0] in self.brightnesses:   # make sure the pin is allowed to be written to
+        print "gpio pin ", pin
+        if self.brightnesses[pin[0]] != pin[1]:
+          self.brightnessesChanged[pin[0]] = pin[0]
+          self.brightnesses[pin[0]] = pin[1]
     if send:
       self.SendUpdates()
 
   def SendUpdates( self ):
-    if self.brightnessChanged:
-      self.brightnessChanged = False
-    if self.wantedOnOff != self.currentOnOff:
-      self.currentOnOff = self.wantedOnOff
-
+    print "SendUpdates ", self.brightnessesChanged
+    for changedPin in self.brightnessesChanged:
+      print "gpio write ", changedPin, " ", RANGE * self.brightnesses[changedPin]
+      wiringpi.softPwmWrite(changedPin, int( RANGE * self.brightnesses[changedPin] ))
+    self.brightnessesChanged = {}
 
 if __name__ == '__main__':
   test = ArcadeGpio()

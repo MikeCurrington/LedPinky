@@ -1,10 +1,4 @@
 <dat>
-  <meta>
-    <description name="Used by LEDBlinky for LED Input Map Data."/>
-    <generatedBy name="GenLEDBlinkyInputMap.exe"/>
-    <version name="6.2.0.0"/>
-    <date name="03/02/2016 10:12:02"/>
-  </meta>
   <ledController type="LEDWIZ" id="1" name="LEDWiz">
     <port number="1" label="P1B5" type="S" inputCodes=""/>
     <port number="2" label="P1B2" type="S" inputCodes="KEYCODE_ENTER"/>
@@ -38,8 +32,8 @@
     <port number="32" label="" type="" inputCodes=""/>
   </ledController>
   <ledController type="GPIO" id="1" name="gpio">
-    <port number="0" label="FAN1" type="F"/>
-    <port number="1" label="MARQUEE" type="M"/>
+    <port number="1" label="FAN1" type="F"/>
+    <port number="0" label="MARQUEE" type="M"/>
   </ledController>
 </dat>
 

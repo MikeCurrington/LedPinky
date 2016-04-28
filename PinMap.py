@@ -63,6 +63,13 @@ class PinMap:
         # assume this is a single color port (or single use)
         pins.append( ( m[0]['device'], m[0]['pin'] ) )
     return pins
- 
+
+  def GetAllPinsOfDevice( self, deviceName ):
+    pins = []
+    for pinName,pin in self.pinMapping.iteritems():
+      m = pin['pins']
+      if len(m) == 1 and m[0]['device'] == deviceName:
+        pins.append( ( m[0]['device'], m[0]['pin'] ) )
+    return pins  
 
 

@@ -12,10 +12,13 @@ from PinMap import PinMap
 from DeviceManager import DeviceManager
 from Sequencer import Sequencer
 from SequenceLightChase import SequenceLightChase
+from SequenceFlicker import SequenceFlicker
 
-ledwiz = LedWiz()
+pinMapping = PinMap('LEDBlinkyInputMap.xml')
+
+ledwiz = LedWiz( )
 ledwiz.Connect()
-gpio = ArcadeGpio()
+gpio = ArcadeGpio( pinMapping.GetAllPinsOfDevice('GPIO') )
 
 devices = DeviceManager()
 devices.Add( "LEDWIZ", ledwiz )
@@ -23,7 +26,7 @@ devices.Add( "GPIO", gpio )
 devices.ClearPins()
 
 gamedata = GameData( 'ColorsDefault.ini', 'Colors.ini', 'controls.xml' )
-gamedata.run()
+#gamedata.run()
 
 marqueeBrightness = 100
 fanspeed = 0
@@ -53,8 +56,6 @@ def LoadMameOutputsIni( iniFilename ):
 
 
 
-
-pinMapping = PinMap('LEDBlinkyInputMap.xml')
 
 sequenceDemo = SequenceLightChase( pinMapping.GetAllPinsOfType('S') )
 marqueeOn = SequenceFlicker( pinMapping.GetAllPinsOfType('M') )

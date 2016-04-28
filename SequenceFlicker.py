@@ -2,9 +2,9 @@ import time
 from SequenceBase import SequenceBase
 
 
-class SequenceLightChase( SequenceBase ):
+class SequenceFlicker( SequenceBase ):
   def __init__(self, pins):
-    super(SequenceLightChase, self).__init__(pins)
+    super(SequenceFlicker, self).__init__(pins)
     self.seq = -1
     self.brightnesses = []
     for pin in pins:
@@ -12,7 +12,7 @@ class SequenceLightChase( SequenceBase ):
     self.sequence = [ (1.0, 0.1), (0.0, 0.5), (1.0, 0.1), (0.0, 0.25), (1.0, 0.1), (0.0, 0.25), (1.0, 0.1), (0.2, 0.25), (1.0, 100.0) ]
 
   def ProcessNext(self):
-    if self.seq < len(self.sequence):
+    if self.seq < len(self.sequence)-1:
       self.seq = self.seq+1
     return self.sequence[self.seq][1]
 
@@ -21,8 +21,8 @@ class SequenceLightChase( SequenceBase ):
       return []
 
     b = self.sequence[self.seq][0]
-    for i in xrange(self.brightnesses):
-      self.brightnesses[i][3] = b
+    for i in xrange(len(self.brightnesses)):
+      self.brightnesses[i][2] = b
     return self.brightnesses
 
 
