@@ -13,6 +13,7 @@ from DeviceManager import DeviceManager
 from Sequencer import Sequencer
 from SequenceLightChase import SequenceLightChase
 from SequenceFlicker import SequenceFlicker
+from SequenceLightSingle import SequenceLightSingle
 
 pinMapping = PinMap('LEDBlinkyInputMap.xml')
 
@@ -26,7 +27,7 @@ devices.Add( "GPIO", gpio )
 devices.ClearPins()
 
 gamedata = GameData( 'ColorsDefault.ini', 'Colors.ini', 'controls.xml' )
-#gamedata.run()
+gamedata.run()
 
 marqueeBrightness = 100
 fanspeed = 0
@@ -57,7 +58,7 @@ def LoadMameOutputsIni( iniFilename ):
 
 
 
-sequenceDemo = SequenceLightChase( pinMapping.GetAllPinsOfType('S') )
+sequenceDemo = SequenceLightSingle( pinMapping.GetAllPinsOfType('S') )
 marqueeOn = SequenceFlicker( pinMapping.GetAllPinsOfType('M') )
 
 sequencer = Sequencer( devices )
@@ -97,13 +98,12 @@ class HttpHandler:
 
   def SetSleep( self, sleep ):
     if sleep==True:
-      ledwiz.ClearPins(True)
-      gpio.marqueeBrightness(0)
+      sequencer.Remove( sequenceDemo )
+      sequencer.Remove( marqueeOn )
       gpio.fanSpeed(0)
     else:
-      ledwiz.ClearPins(False)
-      MarqueeFlicker(gpio)
-      ledwiz.SetAllPins( [129,129,129,129,129,129,129,129,129,129,129,129,129,129,129,129,129,129,129,129,129,129,129,129,129,129,129,129,129,129,129,129], True )
+      sequencer.Add( sequenceDemo )
+      sequencer.Add( marqueeOn )
 
   def SetDemo( self ):
     sequenceThread.running = True

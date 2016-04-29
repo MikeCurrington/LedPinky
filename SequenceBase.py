@@ -9,5 +9,8 @@ class SequenceBase(object):
   def ProcessNext(self):
     return 1.0
 
+  def ProcessShutdown(self):
+    pass
+
   def GetPinsChanged(self):
     return []

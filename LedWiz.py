@@ -73,7 +73,7 @@ class LedWiz:
         for i in range(0, 31, 8):
            msg = []
            for j in range(0,8,1):
-             msg.append( self.brightnesses[i+j] )
+             msg.append( int( 63 * self.brightnesses[i+j] ) )
            self.device.ctrl_transfer(0x21, 0x09, 0x0200, 0, msg)
 
      self.resync = True
@@ -122,7 +122,7 @@ class LedWiz:
      self.wantedPulseSpeed = 3
      self.brightnesses = []
      for i in range(32):
-       self.brightnesses.append( 129 )
+       self.brightnesses.append( 1.0 )
      self.resync = True
      self.device = None
   
