@@ -15,9 +15,8 @@ class SequenceLightSingle( SequenceBase ):
     self.pinsChanged = []
 
   def ProcessNext(self):
-    print "seq ", self.pinsChanged
     self.pinsChanged = [ [self.pins[self.lastSeq][0], self.pins[self.lastSeq][1], 0.0 ], [self.pins[self.seq][0], self.pins[self.seq][1], 1.0] ]
-    print "seq ", self.pinsChanged
+    #print "seq ", self.pinsChanged
     self.lastSeq = self.seq
     self.seq = self.seq + 1
     if self.seq >= len(self.pins):

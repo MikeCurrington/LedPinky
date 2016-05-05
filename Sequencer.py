@@ -42,7 +42,6 @@ class Sequencer( threading.Thread ):
           pinsChanged = sequence.GetPinsChanged()
           if len(pinsChanged) > 0:
             # we could collect all the pins before setting but for now lets set seperately for each sequence and let them fight!
-            print "setchanged ", pinsChanged
             self.devices.SetPins( pinsChanged, True )
         self.waitingToRemove = []
 
@@ -63,7 +62,7 @@ class Sequencer( threading.Thread ):
               pinsChanged = sequence.GetPinsChanged()
             if len(pinsChanged) > 0:
               # we could collect all the pins before setting but for now lets set seperately for each sequence and let them fight!
-              print "setchanged ", pinsChanged
+              #print "setchanged ", pinsChanged
               self.devices.SetPins( pinsChanged, True )
 
 

@@ -14,6 +14,7 @@ from Sequencer import Sequencer
 from SequenceLightChase import SequenceLightChase
 from SequenceFlicker import SequenceFlicker
 from SequenceLightSingle import SequenceLightSingle
+from SequenceFadeUp import SequenceFadeUp
 
 pinMapping = PinMap('LEDBlinkyInputMap.xml')
 
@@ -60,6 +61,7 @@ def LoadMameOutputsIni( iniFilename ):
 
 sequenceDemo = SequenceLightSingle( pinMapping.GetAllPinsOfType('S') )
 marqueeOn = SequenceFlicker( pinMapping.GetAllPinsOfType('M') )
+sequenceGame = SequenceFadeUp( pinMapping.GetAllPinsOfType('S') )
 
 sequencer = Sequencer( devices )
 sequencer.Add( sequenceDemo )
@@ -80,14 +82,11 @@ class HttpHandler:
     portsAndColors = gamedata.FindGamePortsAndColors( gamename )
     portSettings = pinMapping.TranslatePortsAndColorsToPins( portsAndColors )
     print portSettings
-    sequencer.running = False
 
-    devices.ClearPins(False)
-    devices.SetPins(portSettings)
+    sequencer.Remove( sequenceDemo )
+    sequenceGame.SetOnPins(portSettings)
+    sequencer.Add( sequenceGame )
     
-    #ledwiz.ClearPins(False)
-    #ledwiz.SetPins(portSettings)
-
   def SetMarqueeBrightness( self, brightness ):
     gpio.marqueeBrightness( brightness )
     marqueeBrightness = brightness
@@ -100,13 +99,15 @@ class HttpHandler:
     if sleep==True:
       sequencer.Remove( sequenceDemo )
       sequencer.Remove( marqueeOn )
+      sequencer.Remove( sequenceGame )
       gpio.fanSpeed(0)
     else:
       sequencer.Add( sequenceDemo )
       sequencer.Add( marqueeOn )
 
   def SetDemo( self ):
-    sequenceThread.running = True
+    sequencer.Remove( sequenceGame )
+    sequencer.Add( sequenceDemo )
 
 
 ledhttp = HttpHandler()

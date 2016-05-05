@@ -9,7 +9,7 @@ class SequenceFlicker( SequenceBase ):
     self.brightnesses = []
     for pin in pins:
         self.brightnesses.append( [pin[0], pin[1], 0.0] )
-    self.sequence = [ (1.0, 0.1), (0.0, 0.5), (1.0, 0.1), (0.0, 0.25), (1.0, 0.1), (0.0, 0.25), (1.0, 0.1), (0.05, 0.25), (1.0, 100.0) ]
+    self.sequence = [ (1.0, 0.1), (0.0, 0.5), (1.0, 0.1), (0.0, 0.25), (1.0, 0.1), (0.0, 0.25), (1.0, 0.1), (0.05, 0.25), (1.0, 0.1), (1.0, 100.0) ]
 
   def Restart(self):
     self.seq = -1
@@ -32,7 +32,10 @@ class SequenceFlicker( SequenceBase ):
       self.brightnesses[i][2] = 0.0
 
   def GetPinsChanged(self):
-    return self.brightnesses
+    if self.seq < len(self.sequence)-1:
+      return self.brightnesses
+    else:
+      return []
 
 
 

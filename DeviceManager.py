@@ -20,6 +20,6 @@ class DeviceManager:
         devicesOut[pin[0]].append( ( pin[1], pin[2] ) )
 
     for deviceName,portsSettings in devicesOut.iteritems():
-      print "dev send ", portsSettings
+      #print "dev send ", portsSettings
       self.devices[deviceName].SetPins( portsSettings, apply )
 
