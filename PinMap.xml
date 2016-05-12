@@ -1,0 +1,26 @@
+<dat>
+  <ledController type="LEDWIZ" id="1" name="LEDWiz">
+    <port number="1" label="P1B5" type="LED" group="PANEL"/>
+    <port number="2" label="P1B2" type="LED" group="PANEL" inputCodes="KEYCODE_ENTER"/>
+    <port number="9" label="TEST_RGB" type="R"/>
+    <port number="10" label="TEST_RGB" type="G"/>
+    <port number="11" label="TEST_RGB" type="B"/>
+    <port number="17" label="P1B1" type="LED" group="PANEL" inputCodes="KEYCODE_SHIFT"/>
+    <port number="18" label="P1B4" type="LED" group="PANEL"/>
+    <port number="19" label="P1B3" type="LED" group="PANEL"/>
+    <port number="20" label="P1B6" type="LED" group="PANEL"/>
+    <port number="21" label="P1START" type="LED" group="PANEL"/>
+    <port number="22" label="P2START" type="LED" group="PANEL"/>
+    <port number="25" label="P2B1" type="LED" group="PANEL"/>
+    <port number="26" label="P2B2" type="LED" group="PANEL"/>
+    <port number="27" label="P2B3" type="LED" group="PANEL"/>
+    <port number="28" label="P2B4" type="LED" group="PANEL"/>
+    <port number="29" label="P2B5" type="LED" group="PANEL"/>
+    <port number="30" label="P2B6" type="LED" group="PANEL"/>
+  </ledController>
+  <ledController type="GPIO" id="1" name="gpio">
+    <port number="1" label="FAN1" type="FAN" group="COOLING"/>
+    <port number="0" label="MARQUEE" type="LED" group="MARQUEE"/>
+  </ledController>
+</dat>
+

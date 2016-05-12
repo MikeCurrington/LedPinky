@@ -16,7 +16,7 @@ from SequenceFlicker import SequenceFlicker
 from SequenceLightSingle import SequenceLightSingle
 from SequenceFadeUp import SequenceFadeUp
 
-pinMapping = PinMap('LEDBlinkyInputMap.xml')
+pinMapping = PinMap('PinMap.xml')
 
 ledwiz = LedWiz( )
 ledwiz.Connect()
@@ -59,13 +59,17 @@ def LoadMameOutputsIni( iniFilename ):
 
 
 
-sequenceDemo = SequenceLightSingle( pinMapping.GetAllPinsOfType('S') )
-marqueeOn = SequenceFlicker( pinMapping.GetAllPinsOfType('M') )
-sequenceGame = SequenceFadeUp( pinMapping.GetAllPinsOfType('S') )
+sequenceDemo = SequenceLightSingle( pinMapping.GetAllPinsOfGroup('PANEL') )
+marqueeOn = SequenceFlicker( pinMapping.GetAllPinsOfGroup('MARQUEE') )
+marqueeFade = SequenceFadeUp( pinMapping.GetAllPinsOfGroup('MARQUEE') )
+sequenceGame = SequenceFadeUp( pinMapping.GetAllPinsOfGroup('PANEL') )
+sequenceFan = SequenceFadeUp( pinMapping.GetAllPinsOfGroup('COOLING') )
 
 sequencer = Sequencer( devices )
 sequencer.Add( sequenceDemo )
-sequencer.Add( marqueeOn )
+marqueeFade.SetTarget(1.0)
+sequencer.Add( marqueeFade )
+#sequencer.Add( marqueeOn )
 sequencer.start()
 
 ledwiz.ClearPins(False)
@@ -88,22 +92,33 @@ class HttpHandler:
     sequencer.Add( sequenceGame )
     
   def SetMarqueeBrightness( self, brightness ):
-    gpio.marqueeBrightness( brightness )
-    marqueeBrightness = brightness
+    #gpio.marqueeBrightness( brightness )
+    #marqueeBrightness = brightness
+    sequencer.Remove( marqueeOn )
+    sequencer.Remove( marqueeFade )
+    marqueeFade.SetTarget( float(brightness)/100.0 )
+    sequencer.Add( marqueeFade ) # this will put the fade to the head of the list - overriding the marqueeOn sequence
 
   def SetFanSpeed( self, speed ):
-    gpio.fanSpeed( speed )
-    fanspeed = speed
+    sequencer.Remove( sequenceFan )
+    sequenceFan.SetTarget( float(speed)/100.0 )
+    sequencer.Add( sequenceFan )
+    #gpio.fanSpeed( speed )
+    #fanspeed = speed
 
   def SetSleep( self, sleep ):
+    sequencer.Remove( sequenceFan )
     if sleep==True:
       sequencer.Remove( sequenceDemo )
       sequencer.Remove( marqueeOn )
       sequencer.Remove( sequenceGame )
-      gpio.fanSpeed(0)
+      sequenceFan.SetTarget( 0.0 )
+      #gpio.fanSpeed(0)
     else:
       sequencer.Add( sequenceDemo )
       sequencer.Add( marqueeOn )
+      sequenceFan.SetTarget( 1.0 )
+    sequencer.Add( sequenceFan )
 
   def SetDemo( self ):
     sequencer.Remove( sequenceGame )

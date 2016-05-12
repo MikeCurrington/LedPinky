@@ -13,16 +13,16 @@ class Sequencer( threading.Thread ):
     self.devices = devices
     self.sequences = []
     self.waitingToRemove = []   # sequences we will be removing on the next time around (give them chance to shutdown)
+    self.waitingToAdd = []      # sequences will be added next time around (done after a potential shutdown)
 
   def Add( self, sequence ):
-    if sequence not in self.sequences:
-      sequence.Restart()
-      self.sequences.append( sequence )
-    if sequence in self.waitingToRemove:
-      self.waitingToRemove.remove( sequence )
+    if sequence not in self.waitingToAdd:
+      self.waitingToAdd.append( sequence )
 
   def Remove( self, sequence ):
-    if sequence in self.sequences and sequence not in self.waitingToRemove:
+    if sequence in self.waitingToAdd:
+      self.waitingToAdd.remove( sequence )
+    if sequence not in self.waitingToRemove:
       self.waitingToRemove.append( sequence )
     
 
@@ -35,15 +35,23 @@ class Sequencer( threading.Thread ):
 
         #process everything that wants to shut down
         for sequence in self.waitingToRemove:
-          self.sequences.remove( sequence )
-          del sequenceNextEventTimes[sequence]
+          if sequence in self.sequences:
+            self.sequences.remove( sequence )
+            del sequenceNextEventTimes[sequence]
           
-          sequence.ProcessShutdown()
-          pinsChanged = sequence.GetPinsChanged()
-          if len(pinsChanged) > 0:
-            # we could collect all the pins before setting but for now lets set seperately for each sequence and let them fight!
-            self.devices.SetPins( pinsChanged, True )
+            sequence.ProcessShutdown()
+            pinsChanged = sequence.GetPinsChanged()
+            if len(pinsChanged) > 0:
+              # we could collect all the pins before setting but for now lets set seperately for each sequence and let them fight!
+              self.devices.SetPins( pinsChanged, True )
         self.waitingToRemove = []
+
+        #process everything that wants to be added
+        for sequence in self.waitingToAdd:
+          sequence.Restart()
+          if sequence not in self.sequences:
+            self.sequences.append( sequence )
+        self.waitingToAdd = []
 
 
         currentTime = time.time()
