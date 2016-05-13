@@ -8,8 +8,10 @@ class SequenceFadeUp( SequenceBase ):
     self.brightness = 0.0
     self.target = 0.0
     self.brightnesses = []
+    self.brightnessesMask = []
     for pin in pins:
       self.brightnesses.append( [pin[0], pin[1], 0.0] )
+      self.brightnessesMask.append( 1.0 )
 
   def SetOnPins(self, pins ):
     # n^2 search through the pins we control for the pins we are setting brightness on, not ideal but shouldnt be a performace issue for the numbers of pins we are dealing with
@@ -19,10 +21,12 @@ class SequenceFadeUp( SequenceBase ):
       for pinOn in pins:
         if pinOn[0]==knownPin[0] and pinOn[1]==knownPin[1]:
           self.brightnesses[i][2] = pinOn[2]
+          self.brightnessesMask[i] = 1.0
           found = True
           break
       if not found:
         self.brightnesses[i][2] = 0.0
+        self.brightnessesMask[i] = 0.0
 
   def Restart(self):
     #self.brightness = 0.0
@@ -42,7 +46,7 @@ class SequenceFadeUp( SequenceBase ):
       timeUntilNext = 100.0
     print "Fade ", self.brightness, " ", self.target
     for i in xrange(len(self.brightnesses)):
-      self.brightnesses[i][2] = self.brightness
+      self.brightnesses[i][2] = self.brightness * self.brightnessesMask[i]
     return timeUntilNext
 
   def SetTarget(self, target):

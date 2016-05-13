@@ -63,6 +63,7 @@ sequenceDemo = SequenceLightSingle( pinMapping.GetAllPinsOfGroup('PANEL') )
 marqueeOn = SequenceFlicker( pinMapping.GetAllPinsOfGroup('MARQUEE') )
 marqueeFade = SequenceFadeUp( pinMapping.GetAllPinsOfGroup('MARQUEE') )
 sequenceGame = SequenceFadeUp( pinMapping.GetAllPinsOfGroup('PANEL') )
+sequenceGame.SetTarget(1.0)
 sequenceFan = SequenceFadeUp( pinMapping.GetAllPinsOfGroup('COOLING') )
 
 sequencer = Sequencer( devices )
@@ -112,13 +113,16 @@ class HttpHandler:
       sequencer.Remove( sequenceDemo )
       sequencer.Remove( marqueeOn )
       sequencer.Remove( sequenceGame )
+      marqueeFade.SetTarget( 0.0 )
       sequenceFan.SetTarget( 0.0 )
       #gpio.fanSpeed(0)
     else:
       sequencer.Add( sequenceDemo )
       sequencer.Add( marqueeOn )
+      marqueeFade.SetTarget( 1.0 )
       sequenceFan.SetTarget( 1.0 )
     sequencer.Add( sequenceFan )
+    sequencer.Add( marqueeFade )
 
   def SetDemo( self ):
     sequencer.Remove( sequenceGame )

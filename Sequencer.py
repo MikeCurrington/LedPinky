@@ -49,6 +49,8 @@ class Sequencer( threading.Thread ):
         #process everything that wants to be added
         for sequence in self.waitingToAdd:
           sequence.Restart()
+          if sequence in sequenceNextEventTimes:
+            del sequenceNextEventTimes[sequence]
           if sequence not in self.sequences:
             self.sequences.append( sequence )
         self.waitingToAdd = []
