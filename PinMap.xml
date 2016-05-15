@@ -19,7 +19,7 @@
     <port number="30" label="P2B6" type="LED" group="PANEL"/>
   </ledController>
   <ledController type="GPIO" id="1" name="gpio">
-    <port number="1" label="FAN1" type="FAN" group="COOLING"/>
+    <port number="1" label="FAN1" type="FAN" group="FAN"/>
     <port number="0" label="MARQUEE" type="LED" group="MARQUEE"/>
   </ledController>
 </dat>
