@@ -57,9 +57,7 @@ def LoadMameOutputsIni( iniFilename ):
 
 
 
-
-
-sequenceDemo = SequenceLightSingle( pinMapping.GetAllPinsOfGroup('PANEL') )
+sequenceDemo = SequenceLightSingle( pinMapping.GetAllPinsOfGroupInOrder('PANEL') )
 marqueeOn = SequenceFlicker( pinMapping.GetAllPinsOfGroup('MARQUEE') )
 marqueeFade = SequenceFadeUp( pinMapping.GetAllPinsOfGroup('MARQUEE') )
 sequenceGame = SequenceFadeUp( pinMapping.GetAllPinsOfGroup('PANEL') )

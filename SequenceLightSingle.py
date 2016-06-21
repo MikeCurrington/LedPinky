@@ -8,6 +8,7 @@ class SequenceLightSingle( SequenceBase ):
     self.seq = 0
     self.lastSeq = 0
     self.pinsChanged = []
+    self.delay = 0.05
 
   def Restart(self):
     self.seq = 0
@@ -21,7 +22,7 @@ class SequenceLightSingle( SequenceBase ):
     self.seq = self.seq + 1
     if self.seq >= len(self.pins):
       self.seq = 0
-    return 0.1
+    return self.delay
 
   def ProcessShutdown(self):
     # put everything back to how it was
