@@ -5,6 +5,7 @@ from SequenceBase import SequenceBase
 class SequenceLightSingle( SequenceBase ):
   def __init__(self, pins):
     super(SequenceLightSingle, self).__init__(pins)
+    print("pins %d" % len(pins))
     self.seq = 0
     self.lastSeq = 0
     self.pinsChanged = []
@@ -16,6 +17,8 @@ class SequenceLightSingle( SequenceBase ):
     self.pinsChanged = []
 
   def ProcessNext(self):
+    if len(self.pins)<=0:
+      return 10.0
     self.pinsChanged = [ [self.pins[self.lastSeq][0], self.pins[self.lastSeq][1], 0.0 ], [self.pins[self.seq][0], self.pins[self.seq][1], 1.0] ]
     #print "seq ", self.pinsChanged
     self.lastSeq = self.seq
@@ -30,4 +33,7 @@ class SequenceLightSingle( SequenceBase ):
 
   def GetPinsChanged(self):
     return self.pinsChanged
+
+  def SetDelay(self, d):
+    self.delay = d
 

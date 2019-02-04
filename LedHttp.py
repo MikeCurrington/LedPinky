@@ -27,8 +27,8 @@ class LedHttp:
       #Handler for the GET requests
       def do_GET(self):
         response = 'unknown command'
-        if self.path.startswith("/game/"):
-          self.controlHandler.SetGame( self.path[6:] )
+        if self.path.startswith("/playing/"):
+          self.controlHandler.SetGame( self.path[9:] )
           response = 'ok'
         elif self.path.startswith("/sleep"):
           self.controlHandler.SetSleep(True)

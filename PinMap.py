@@ -29,7 +29,10 @@ class PinMap:
         usedPins[device].append( pinnumber )
         if label not in self.pinMapping:
           self.pinMapping[label] = { "pins":[] }
-        self.pinMapping[label]["pins"].append( {"type":pin.get('type'), "pin":pinnumber, "device":device, "group":pin.get('group'), "order":int(pin.get('effectOrder', "0"))} )
+        pinGroups = pin.get('group')
+        if pinGroups:
+          pinGroups = pinGroups.split(",")
+        self.pinMapping[label]["pins"].append( {"type":pin.get('type'), "pin":pinnumber, "device":device, "group":pinGroups, "order":int(pin.get('effectOrder', "0"))} )
 
         print "added ", pin.get('label'), " ", pin.get('type')
 
@@ -76,7 +79,7 @@ class PinMap:
     pins = []
     for pinName,pin in self.pinMapping.iteritems():
       m = pin['pins']
-      if m[0]['group'] == pingroup:
+      if m[0]['group'] and pingroup in m[0]['group']:
         # assume this is a single color port (or single use)
         pins.append( ( m[0]['device'], m[0]['pin'] ) )
     return pins
@@ -85,9 +88,10 @@ class PinMap:
     pins = []
     for pinName,pin in self.pinMapping.iteritems():
       m = pin['pins']
-      if m[0]['group'] == pingroup:
+      if m[0]['group'] and pingroup in m[0]['group']:
         # assume this is a single color port (or single use)
         pins.append( ( m[0]['order'], m[0]['device'], m[0]['pin'] ) )
+
     # sort by the order value
     pins = sorted( pins, key=lambda x: x[0] )
     # somewhat hack to remove the order value

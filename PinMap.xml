@@ -1,22 +1,22 @@
 <dat>
   <ledController type="LEDWIZ" id="1" name="LEDWiz">
-    <port number="1" label="P1B5" type="LED" group="PANEL" effectOrder="2"/>
-    <port number="2" label="P1B2" type="LED" group="PANEL" inputCodes="KEYCODE_ENTER" effectOrder="15"/>
+    <port number="1" label="P1B5" type="LED" group="PANEL,LEFTSTICK" effectOrder="2"/>
+    <port number="2" label="P1B2" type="LED" group="PANEL,LEFTSTICK" inputCodes="KEYCODE_ENTER" effectOrder="15"/>
     <port number="9" label="TEST_RGB" type="R"/>
     <port number="10" label="TEST_RGB" type="G"/>
     <port number="11" label="TEST_RGB" type="B"/>
-    <port number="17" label="P1B1" type="LED" group="PANEL" inputCodes="KEYCODE_SHIFT" effectOrder="16"/>
-    <port number="18" label="P1B4" type="LED" group="PANEL" effectOrder="1"/>
-    <port number="19" label="P1B3" type="LED" group="PANEL" effectOrder="3"/>
-    <port number="20" label="P1B6" type="LED" group="PANEL" effectOrder="14"/>
+    <port number="17" label="P1B1" type="LED" group="PANEL,LEFTSTICK" inputCodes="KEYCODE_SHIFT" effectOrder="16"/>
+    <port number="18" label="P1B4" type="LED" group="PANEL,LEFTSTICK" effectOrder="1"/>
+    <port number="19" label="P1B3" type="LED" group="PANEL,LEFTSTICK" effectOrder="3"/>
+    <port number="20" label="P1B6" type="LED" group="PANEL,LEFTSTICK" effectOrder="14"/>
     <port number="21" label="P1START" type="LED" group="PANEL" effectOrder="13"/>
     <port number="22" label="P2START" type="LED" group="PANEL" effectOrder="12"/>
-    <port number="28" label="P2B1" type="LED" group="PANEL" effectOrder="11"/>
-    <port number="29" label="P2B2" type="LED" group="PANEL" effectOrder="10"/>
-    <port number="30" label="P2B3" type="LED" group="PANEL" effectOrder="9"/>
-    <port number="25" label="P2B4" type="LED" group="PANEL" effectOrder="6"/>
-    <port number="26" label="P2B5" type="LED" group="PANEL" effectOrder="7"/>
-    <port number="27" label="P2B6" type="LED" group="PANEL" effectOrder="8"/>
+    <port number="28" label="P2B1" type="LED" group="PANEL,RIGHTSTICK" effectOrder="11"/>
+    <port number="29" label="P2B2" type="LED" group="PANEL,RIGHTSTICK" effectOrder="10"/>
+    <port number="30" label="P2B3" type="LED" group="PANEL,RIGHTSTICK" effectOrder="9"/>
+    <port number="25" label="P2B4" type="LED" group="PANEL,RIGHTSTICK" effectOrder="6"/>
+    <port number="26" label="P2B5" type="LED" group="PANEL,RIGHTSTICK" effectOrder="7"/>
+    <port number="27" label="P2B6" type="LED" group="PANEL,RIGHTSTICK" effectOrder="8"/>
   </ledController>
   <ledController type="GPIO" id="1" name="gpio">
     <port number="1" label="FAN1" type="FAN" group="FAN"/>

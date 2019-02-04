@@ -15,6 +15,8 @@ from SequenceLightChase import SequenceLightChase
 from SequenceFlicker import SequenceFlicker
 from SequenceLightSingle import SequenceLightSingle
 from SequenceFadeUp import SequenceFadeUp
+from SequenceGroup import SequenceGroup
+
 
 pinMapping = PinMap('PinMap.xml')
 
@@ -57,7 +59,17 @@ def LoadMameOutputsIni( iniFilename ):
 
 
 
-sequenceDemo = SequenceLightSingle( pinMapping.GetAllPinsOfGroupInOrder('PANEL') )
+#sequenceDemo = SequenceLightSingle( pinMapping.GetAllPinsOfGroupInOrder('PANEL') )
+sequenceLeftDemoCircle = SequenceLightSingle( pinMapping.GetAllPinsOfGroupInOrder('LEFTSTICK')[::-1] )
+sequenceLeftDemoCircle.SetDelay(0.2)
+sequenceRightDemoCircle = SequenceLightSingle( pinMapping.GetAllPinsOfGroupInOrder('RIGHTSTICK') )
+sequenceLeftDemoCircle.SetDelay(0.1)
+sequenceDemo = SequenceGroup()
+sequenceDemo.Add(sequenceLeftDemoCircle)
+sequenceDemo.Add(sequenceRightDemoCircle)
+sequenceDemo.SetDelay(0.1)
+
+
 marqueeOn = SequenceFlicker( pinMapping.GetAllPinsOfGroup('MARQUEE') )
 marqueeFade = SequenceFadeUp( pinMapping.GetAllPinsOfGroup('MARQUEE') )
 sequenceGame = SequenceFadeUp( pinMapping.GetAllPinsOfGroup('PANEL') )
