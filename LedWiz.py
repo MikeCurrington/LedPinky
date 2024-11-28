@@ -54,7 +54,7 @@ class LedWiz:
         self.currentPulseSpeed = self.wantedPulseSpeed
       
         sbaMsg = [64,(self.currentOnOff>>0)&0xff,(self.currentOnOff>>8)&0xff,(self.currentOnOff>>16)&0xff,(self.currentOnOff>>24)&0xff,self.wantedPulseSpeed,0,0]
-        print("sbaMsg " + str(sbaMsg))
+        #print("sbaMsg " + str(sbaMsg))
 
         #send message to device
         self.device.ctrl_transfer(0x21, 0x09, 0x0200, 0, sbaMsg)
@@ -74,7 +74,7 @@ class LedWiz:
            msg = []
            for j in range(0,8,1):
              msg.append( self.brightnesses[i+j] )
-           print("bright sbaMsg " + str(msg))
+           #print("bright sbaMsg " + str(msg))
            self.device.ctrl_transfer(0x21, 0x09, 0x0200, 0, msg)
 
      self.resync = False
