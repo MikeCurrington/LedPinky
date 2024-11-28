@@ -11,11 +11,16 @@ from GameData import GameData
 from PinMap import PinMap
 from DeviceManager import DeviceManager
 from Sequencer import Sequencer
-from SequenceLightChase import SequenceLightChase
-from SequenceFlicker import SequenceFlicker
-from SequenceLightSingle import SequenceLightSingle
 from SequenceFadeUp import SequenceFadeUp
+from SequenceFlicker import SequenceFlicker
 from SequenceGroup import SequenceGroup
+from SequenceLightChase import SequenceLightChase
+from SequenceLightSingle import SequenceLightSingle
+from SequenceLightBrightness import SequenceLightBrightness
+
+#make sure we are running from the same folder as this python file is in!
+from os.path import abspath, dirname
+os.chdir(dirname(abspath(__file__)))
 
 
 pinMapping = PinMap('PinMap.xml')
@@ -59,7 +64,6 @@ def LoadMameOutputsIni( iniFilename ):
 
 
 
-#sequenceDemo = SequenceLightSingle( pinMapping.GetAllPinsOfGroupInOrder('PANEL') )
 sequenceLeftDemoCircle = SequenceLightSingle( pinMapping.GetAllPinsOfGroupInOrder('LEFTSTICK')[::-1] )
 sequenceLeftDemoCircle.SetDelay(0.2)
 sequenceRightDemoCircle = SequenceLightSingle( pinMapping.GetAllPinsOfGroupInOrder('RIGHTSTICK') )
@@ -69,17 +73,23 @@ sequenceDemo.Add(sequenceLeftDemoCircle)
 sequenceDemo.Add(sequenceRightDemoCircle)
 sequenceDemo.SetDelay(0.1)
 
+sequencePulseCoin = SequenceLightBrightness( pinMapping.GetAllPinsOfGroup('COIN') )
+sequencePulseCoin.SetBrightness( -1 )
+sequenceEmstation = SequenceLightBrightness( pinMapping.GetAllPinsOfGroup('EMSTATION') )
+sequenceEmstation.SetBrightness( -1 )
 
 marqueeOn = SequenceFlicker( pinMapping.GetAllPinsOfGroup('MARQUEE') )
 marqueeFade = SequenceFadeUp( pinMapping.GetAllPinsOfGroup('MARQUEE') )
+marqueeFade.SetTarget(1.0)
 sequenceGame = SequenceFadeUp( pinMapping.GetAllPinsOfGroup('PANEL') )
 sequenceGame.SetTarget(1.0)
 sequenceFan = SequenceFadeUp( pinMapping.GetAllPinsOfGroup('FAN') )
 
 sequencer = Sequencer( devices )
-sequencer.Add( sequenceDemo )
-marqueeFade.SetTarget(1.0)
-sequencer.Add( marqueeFade )
+#sequencer.Add( sequenceDemo )
+#sequencer.Add( sequencePulseCoin )
+sequencer.Add( sequenceEmstation )
+#sequencer.Add( marqueeFade )
 #sequencer.Add( marqueeOn )
 sequencer.start()
 
@@ -96,9 +106,9 @@ class HttpHandler:
   def SetGame(self, gamename):
     portsAndColors = gamedata.FindGamePortsAndColors( gamename )
     portSettings = pinMapping.TranslatePortsAndColorsToPins( portsAndColors )
-    print portSettings
+    print(portSettings)
 
-    sequencer.Remove( sequenceDemo )
+    sequencer.Remove( sequenceEmstation )
     sequenceGame.SetOnPins(portSettings)
     sequencer.Add( sequenceGame )
     
@@ -118,14 +128,14 @@ class HttpHandler:
   def SetSleep( self, sleep ):
     sequencer.Remove( sequenceFan )
     if sleep==True:
-      sequencer.Remove( sequenceDemo )
+      sequencer.Remove( sequenceEmstation )
       sequencer.Remove( marqueeOn )
       sequencer.Remove( sequenceGame )
       marqueeFade.SetTarget( 0.0 )
       sequenceFan.SetTarget( 0.0 )
       #gpio.fanSpeed(0)
     else:
-      sequencer.Add( sequenceDemo )
+      sequencer.Add( sequenceEmstation )
       sequencer.Add( marqueeOn )
       marqueeFade.SetTarget( 1.0 )
       sequenceFan.SetTarget( 1.0 )
@@ -134,7 +144,7 @@ class HttpHandler:
 
   def SetDemo( self ):
     sequencer.Remove( sequenceGame )
-    sequencer.Add( sequenceDemo )
+    sequencer.Add( sequenceEmstation )
 
 
 ledhttp = HttpHandler()

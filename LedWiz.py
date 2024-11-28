@@ -54,7 +54,7 @@ class LedWiz:
         self.currentPulseSpeed = self.wantedPulseSpeed
       
         sbaMsg = [64,(self.currentOnOff>>0)&0xff,(self.currentOnOff>>8)&0xff,(self.currentOnOff>>16)&0xff,(self.currentOnOff>>24)&0xff,self.wantedPulseSpeed,0,0]
-        #print sbaMsg
+        print("sbaMsg " + str(sbaMsg))
 
         #send message to device
         self.device.ctrl_transfer(0x21, 0x09, 0x0200, 0, sbaMsg)
@@ -73,20 +73,25 @@ class LedWiz:
         for i in range(0, 31, 8):
            msg = []
            for j in range(0,8,1):
-             msg.append( int( 63 * self.brightnesses[i+j] ) )
+             msg.append( self.brightnesses[i+j] )
+           print("bright sbaMsg " + str(msg))
            self.device.ctrl_transfer(0x21, 0x09, 0x0200, 0, msg)
 
-     self.resync = True
+     self.resync = False
 
 
   def SetAllPins( self, pins, send=True ):
     i = 0
     self.wantedOnOff = 0
     for pin in pins:
-      if self.brightnesses[i] != pin:
-        self.brightnesses[i] = pin
+      if pin < 0:
+        val = 128-int(pin)
+      else:
+        val = int(49.0*pin)
+      if self.brightnesses[i] != val:
+        self.brightnesses[i] = val
         self.brightnessChanged = True
-      if (pin <= 0):
+      if val == 0:
         self.wantedOnOff |= (1<<i)
       i = i+1
     if send:
@@ -103,11 +108,13 @@ class LedWiz:
     for pin in pinNumberBrightnessPairs:
       #print pin
       pinNum = pin[0]-1
-      pinBright = pin[1]
+      pinBright = int(49.0 * pin[1])
+      if pinBright < 0:
+        pinBright = 128 - int(pin[1])
       if self.brightnesses[pinNum] != pinBright:
         self.brightnessChanged = True
         self.brightnesses[pinNum] = pinBright
-      if pinBright > 0:
+      if pinBright != 0:
         self.wantedOnOff |= (1<<pinNum)
       else:
         self.wantedOnOff &= ~(1<<pinNum)
@@ -122,7 +129,7 @@ class LedWiz:
      self.wantedPulseSpeed = 3
      self.brightnesses = []
      for i in range(32):
-       self.brightnesses.append( 1.0 )
+       self.brightnesses.append( 49 )
      self.resync = True
      self.device = None
   
